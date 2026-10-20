@@ -57,13 +57,13 @@
       "value": "",
       "required": true
     },
-    "SHRUTI_API_URL": {
+    "API_URL": {
       "description": "Your Cherry API URL",
-      "value": "https://api.shrutibots.site",
+      "value": "https://api.shrutibots.in",
       "required": true
     },
-    "SHRUTI_API_KEY": {
-      "description": "Get API key from Telegram bot @SHRUTIAPIBOT",
+    "API_KEY": {
+      "description": "Get API key from Telegram bot",
       "value": "",
       "required": true
     }
