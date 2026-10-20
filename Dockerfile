@@ -1,23 +1,21 @@
-#─────────────────────────────────────────────────────
-# Project    : Music bot
-# Name       : CherryMusicbot
-# Email      : tutorialtech99@gmail.com
-# Developer  : @Uffsexyboi
-# Developer  : @Seductive_caffine
-# Powered by : TeamAlfabots
-#─────────────────────────────────────────────────────
+# -----------------------------------------------------
+# Project    : CherryMusic 2.0
+# Powered by : TeamAlfaBots
+# -----------------------------------------------------
 FROM nikolaik/python-nodejs:python3.10-nodejs20
 
-RUN curl -L https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz \
-    -o ffmpeg.tar.xz && \
-    tar -xJf ffmpeg.tar.xz && \
-    mv ffmpeg-*-static/ffmpeg /usr/local/bin/ && \
-    mv ffmpeg-*-static/ffprobe /usr/local/bin/ && \
-    rm -rf ffmpeg*
+# Install FFmpeg and certificates from the OS package repository.
+# The base image is Debian/Ubuntu compatible.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends ffmpeg ca-certificates && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY . /app/
-WORKDIR /app/
+WORKDIR /app
 
+COPY requirements.txt ./requirements.txt
 RUN pip3 install --no-cache-dir -r requirements.txt
 
+COPY . .
+
+# Keep the project's existing startup command.
 CMD ["bash", "start"]
