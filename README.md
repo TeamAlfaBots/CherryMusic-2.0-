@@ -21,7 +21,7 @@
 | `OWNER_ID` | **Your** Telegram user ID (no default) |
 | `LOGGER_ID` | Log group/channel ID |
 | `STRING_SESSION` | Pyrogram v2 assistant session (`STRING_SESSION2..5` optional) |
-| `SHRUTI_API_URL`, `SHRUTI_API_KEY` | Download API URL and key (point to your own API if self-hosted) |
+| `API_URL`, `API_KEY` | Download API URL and key (point to your own API if self-hosted) |
 
 Optional: `UPSTREAM_REPO` (your own repo, enables `/update`), `UPSTREAM_BRANCH`, `GIT_TOKEN`, `SUPPORT_CHANNEL`, `SUPPORT_CHAT`, `DURATION_LIMIT`, `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `HEROKU_API_KEY`, `HEROKU_APP_NAME`.
 
