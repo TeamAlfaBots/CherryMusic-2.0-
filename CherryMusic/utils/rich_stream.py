@@ -81,6 +81,9 @@ def _balance_lines(caption_html):
 
 
 def _html_caption_to_blocks(caption_html):
+    caption_html = re.sub(
+        r"</?blockquote[^>]*>", "", caption_html or "", flags=re.IGNORECASE
+    )
     return [
         types.InputRichBlockParagraph(text=_parse_inline(line))
         for line in _balance_lines(caption_html)
@@ -383,3 +386,4 @@ async def set_now_playing_state(chat_id, playing):
         return await _edit_rich(mystic, blocks)
     except Exception:
         return None
+        
