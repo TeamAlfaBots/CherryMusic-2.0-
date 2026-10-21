@@ -80,14 +80,54 @@ def _balance_lines(caption_html):
     return lines
 
 
-def _html_caption_to_blocks(caption_html):
-    caption_html = re.sub(
-        r"</?blockquote[^>]*>", "", caption_html or "", flags=re.IGNORECASE
-    )
+_QUOTE_RE = re.compile(
+    r"<blockquote(\s+expandable)?\s*>(.*?)</blockquote>", re.IGNORECASE | re.DOTALL
+)
+_STRAY_QUOTE_RE = re.compile(r"</?blockquote[^>]*>", re.IGNORECASE)
+
+_QUOTE_CLASSES = ("InputRichBlockBlockQuotation", "InputRichBlockBlockquote")
+_EXPANDABLE_QUOTE_CLASSES = (
+    "InputRichBlockExpandableBlockQuotation",
+    "InputRichBlockExpandableBlockquote",
+)
+
+
+def _paragraphs(text):
     return [
         types.InputRichBlockParagraph(text=_parse_inline(line))
-        for line in _balance_lines(caption_html)
+        for line in _balance_lines(text)
     ]
+
+
+def _quote_block(inner_blocks, expandable):
+    names = (_EXPANDABLE_QUOTE_CLASSES if expandable else ()) + _QUOTE_CLASSES
+    for name in names:
+        cls = getattr(types, name, None)
+        if cls is None:
+            continue
+        try:
+            return cls(blocks=inner_blocks)
+        except Exception:
+            continue
+    return None
+
+
+def _html_caption_to_blocks(caption_html):
+    caption_html = caption_html or ""
+    blocks = []
+    pos = 0
+    for m in _QUOTE_RE.finditer(caption_html):
+        before = _STRAY_QUOTE_RE.sub("", caption_html[pos : m.start()]).strip("\n")
+        if before:
+            blocks += _paragraphs(before)
+        inner = _paragraphs(m.group(2).strip("\n"))
+        quote = _quote_block(inner, bool(m.group(1)))
+        blocks += [quote] if quote is not None else inner
+        pos = m.end()
+    rest = _STRAY_QUOTE_RE.sub("", caption_html[pos:])
+    if rest.strip("\n") or not blocks:
+        blocks += _paragraphs(rest)
+    return blocks
 
 
 def _progress_line(played, dur):
