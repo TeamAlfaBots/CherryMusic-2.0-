@@ -9,7 +9,9 @@
 import asyncio
 import importlib
 import logging
+import os
 
+from aiohttp import web
 from pyrogram import idle
 from pytgcalls.exceptions import NoActiveGroupCall
 
@@ -31,7 +33,19 @@ class _EndedCallNoiseFilter(logging.Filter):
 logging.getLogger("asyncio").addFilter(_EndedCallNoiseFilter())
 
 
+async def _start_web():
+    """Tiny web server so hosts that need an open PORT (and pingers) work."""
+    app = web.Application()
+    app.router.add_get("/", lambda r: web.Response(text="CherryMusic is running"))
+    runner = web.AppRunner(app)
+    await runner.setup()
+    port = int(os.environ.get("PORT", 8080))
+    await web.TCPSite(runner, "0.0.0.0", port).start()
+    LOGGER("CherryMusic").info(f"Web server started on port {port}")
+
+
 async def init():
+    await _start_web()
     if (
         not config.STRING1
         and not config.STRING2
@@ -78,3 +92,4 @@ async def init():
 
 if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(init())
+    
