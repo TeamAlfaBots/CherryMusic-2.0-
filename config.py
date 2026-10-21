@@ -36,7 +36,7 @@ HEROKU_APP_NAME = getenv("HEROKU_APP_NAME", "")
 HEROKU_API_KEY = getenv("HEROKU_API_KEY", "")
 
 # Set UPSTREAM_REPO to YOUR OWN repo url (used only by the updater). Empty = updater disabled.
-UPSTREAM_REPO = getenv("https://github.com/TeamAlfaBots/CherryMusic-2.0", "")
+UPSTREAM_REPO = getenv("UPSTREAM_REPO", "")
 
 UPSTREAM_BRANCH = getenv("UPSTREAM_BRANCH", "main")
 
